@@ -87,6 +87,9 @@ impl DownloadArgs {
         let mut ctrl_c_stream =
             tokio::signal::unix::signal(tokio::signal::unix::SignalKind::interrupt())?;
 
+        let mut ctrl_term_stream =
+            tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())?;
+
         // Spawn tasks corresponding to each download.
         //
         // In a real application you'll want to use limiting here to ensure that downloads don't get
@@ -151,6 +154,12 @@ impl DownloadArgs {
                     // TODO/exercise (medium): implement the "double ctrl-c" pattern. The first time
                     // Ctrl-C is pressed, send a cancellation message and wait for worker tasks to
                     // finish. The second time, exit immediately.
+                },
+                Some(_) = ctrl_term_stream.recv() => {
+                    tracing::info!("SIGTERM received, terminating downloads");
+                    sender.send(CancelMessage::new(CancelKind::Terminate))?;
+
+                    // Don't break here -- wait for all the downloads to finish.
                 }
             }
         }
@@ -350,4 +359,6 @@ impl CancelMessage {
 enum CancelKind {
     /// A SIGINT (Ctrl-C) was received.
     Interrupt,
+    /// A SIGTERM (kill -15 <pid> or kill -TERM <pid>) was received.
+    Terminate,
 }

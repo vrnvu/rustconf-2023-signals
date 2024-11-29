@@ -55,6 +55,11 @@ There are several exercises included in the source code -- search for `TODO/exer
 out! Each exercise has a difficulty level next to it. Feel free to create forks with solutions, but
 please **do not send pull requests** with solutions.
 
+## Solutions
+
+We implemented SIGTERM support in the `download-manager` binary. To test it, run:
+> pgrep -f "download-manager" | xargs kill -INT
+
 ## Contributing
 
 Pull requests fixing typos or clarifying content are welcome. Please do not send PRs containing demo

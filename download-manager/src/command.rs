@@ -72,9 +72,6 @@ impl DownloadArgs {
 
         // Start the SIGINT signal handler.
         //
-        // TODO/exercise (easy): In a real application you'll likely want to handle more signals
-        // than just Ctrl-C. Try implementing support for SIGTERM and SIGHUP.
-        //
         // TODO/exercise (hard): As a stretch goal, implement support for SIGTSTP and SIGCONT that:
         // - pauses timers when SIGTSTP is encountered, then stops the current process.
         // - resumes timers when the process is resumed with SIGCONT.
